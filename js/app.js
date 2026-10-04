@@ -1390,7 +1390,13 @@ const signOutButton =
                     'PROFILE CLOSED AFTER SIGN OUT'
                 );
 
-                window.location.reload();
+                window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname + window.location.search
+);
+
+window.location.reload();
 
             }
         );
@@ -1568,15 +1574,17 @@ if (window.supabaseClient) {
     window.supabaseClient.auth.onAuthStateChange(
         (event, session) => {
 
-            if (
-                event === 'SIGNED_IN' &&
-                session &&
-                session.user
-            ) {
+        if (
+    event !== 'SIGNED_IN' ||
+    !session ||
+    !session.user
+) {
+    return;
+}
 
-                console.log(
-                    'MAGIC LINK SIGN-IN DETECTED'
-                );
+console.log(
+    'MAGIC LINK SIGN-IN DETECTED'
+);
 
                 /*
                  * Delay the Supabase work until
@@ -1672,7 +1680,6 @@ if (window.supabaseClient) {
 
             }
 
-        }
     );
 
 }
