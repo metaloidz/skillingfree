@@ -2139,7 +2139,7 @@ if (signOutButton) {
     shouldCreateUser: true,
 
     emailRedirectTo:
-        window.location.href
+    window.location.origin
 
 }
 
