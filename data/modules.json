@@ -1,0 +1,522 @@
+[
+  {
+    "id": "ai101",
+    "code": "LP-101",
+    "name": "AI Fundamentals",
+    "cat": "foundation",
+    "x": 590,
+    "y": 665,
+    "xp": 100,
+    "pre": [],
+    "desc": "Core AI concepts, machine learning, responsible AI and the Microsoft AI landscape.",
+    "learn": "https://learn.microsoft.com/en-us/training/paths/ai-concepts//",
+    "skills": [
+      "AI concepts",
+      "Machine Learning",
+      "Predictive AI",
+      "Generative AI",
+      "AI Applications",
+      "Responsible AI"
+    ]
+  },
+  {
+    "id": "ai102",
+    "code": "LP-102",
+    "name": "Generative AI",
+    "cat": "foundation",
+    "x": 590,
+    "y": 550,
+    "xp": 150,
+    "pre": [
+      "ai101"
+    ],
+    "desc": "LLMs, prompt engineering, generative AI patterns and application fundamentals.",
+    "learn": "https://learn.microsoft.com/en-us/training/paths/explore-microsoft-365-copilot-business-chat//",
+    "skills": [
+      "LLMs",
+      "Prompt Engineering",
+      "Generative AI"
+    ]
+  },
+  {
+    "id": "ai103",
+    "code": "LP-103",
+    "name": "Drive AI transformation",
+    "cat": "main",
+    "x": 590,
+    "y": 430,
+    "xp": 200,
+    "pre": [
+      "ai101",
+      "ai102"
+    ],
+    "desc": "Azure AI, Microsoft Foundry, Power Platform, Copilot and the Microsoft AI ecosystem.",
+    "learn": "https://learn.microsoft.com/en-us/training/courses/ab-731t00/",
+    "skills": [
+      "Azure AI",
+      "Copilot",
+      "Power Platform"
+    ]
+  },
+  {
+    "id": "ai201",
+    "code": "LP-201",
+    "name": "Power Platform",
+    "cat": "platform",
+    "x": 210,
+    "y": 430,
+    "xp": 150,
+    "pre": [
+      "ai101",
+      "ai102",
+      "ai103"
+    ],
+    "desc": "Apply AI to Power Apps, Power Automate, Dataverse and AI-assisted business processes.",
+    "learn": "https://learn.microsoft.com/en-us/training/powerplatform/",
+    "skills": [
+      "Power Apps",
+      "Power Automate",
+      "Dataverse",
+      "AI Builder"
+    ]
+  },
+  {
+    "id": "ai202",
+    "code": "LP-202",
+    "name": "Copilot",
+    "cat": "platform",
+    "x": 210,
+    "y": 300,
+    "xp": 175,
+    "pre": [
+      "ai201",
+      "ai102"
+    ],
+    "desc": "Understand Microsoft Copilot and generative AI in business workflows.",
+    "learn": "https://learn.microsoft.com/en-us/training/modules/introduction-copilot-power-platform/",
+    "skills": [
+      "Copilot",
+      "Prompting",
+      "Business AI"
+    ]
+  },
+  {
+    "id": "ai203",
+    "code": "LP-203",
+    "name": "Copilot Studio",
+    "cat": "platform",
+    "x": 210,
+    "y": 170,
+    "xp": 200,
+    "pre": [
+      "ai202"
+    ],
+    "desc": "Build copilots and conversational experiences using Copilot Studio.",
+    "learn": "https://learn.microsoft.com/en-us/training/paths/create-extend-custom-copilots-microsoft-copilot-studio/",
+    "skills": [
+      "Agents",
+      "Topics",
+      "Actions"
+    ]
+  },
+  {
+    "id": "ai204",
+    "code": "LP-204",
+    "name": "AI Agents",
+    "cat": "platform",
+    "x": 375,
+    "y": 170,
+    "xp": 250,
+    "pre": [
+      "ai203",
+      "ai103"
+    ],
+    "desc": "Design autonomous and tool-using AI agents for enterprise workflows.",
+    "learn": "https://learn.microsoft.com/en-us/training/modules/ai-agent-fundamentals/",
+    "skills": [
+      "Agents",
+      "Tools",
+      "Orchestration"
+    ]
+  },
+  {
+    "id": "lp205",
+    "code": "LP-205",
+    "name": "Power Automate",
+    "cat": "platform",
+    "x": 75,
+    "y": 200,
+    "xp": 250,
+    "pre": [
+      "ai201"
+    ],
+    "desc": "Build automated business workflows using triggers, actions, conditions, expressions, connectors and approvals.",
+    "learn": "https://learn.microsoft.com/en-us/training/powerplatform/power-automate",
+    "skills": [
+      "Triggers",
+      "Actions",
+      "Conditions",
+      "Expressions",
+      "Connectors",
+      "Approvals"
+    ]
+},
+{
+    "id": "pl7002",
+    "code": "APPLIED SKILL",
+    "name": "Create and manage automated processes by using Power Automate",
+    "cat": "applied-skill",
+    "x": -20,
+    "y": 50,
+    "xp": 300,
+    "pre": [
+        "lp205"
+    ],
+    "desc": "Demonstrate the ability to create and manage automated processes with Power Automate.",
+    "learn": "https://learn.microsoft.com/en-us/credentials/applied-skills/create-and-manage-automated-processes-with-power-automate/",
+    "skills": [
+        "Triggers",
+        "Actions",
+        "Conditional Logic",
+        "Approvals",
+        "Flow Sharing"
+    ]
+},
+
+  {
+    "id": "pl900",
+    "code": "CERTIFICATION",
+    "name": "PL-900: Power Platform Fundamentals",
+    "cat": "certification",
+    "logo": "./assets/microsoft-certified-fundamentals-badge.svg",
+    "x": 150,
+    "y": 10,
+    "xp": 300,
+    "pre": [
+        "ai201",
+        "lp205"
+    ],
+    "desc": "Demonstrate the business value and product capabilities of Microsoft Power Platform, including Power Apps, Power Automate, Dataverse, connectors, and Copilot Studio.",
+    "learn": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/",
+    "skills": [
+        "Power Apps",
+        "Power Automate",
+        "Dataverse",
+        "Connectors",
+        "Copilot Studio",
+        "Power Platform Governance"
+    ]
+},
+
+{
+    "id": "ab410",
+    "code": "CERTIFICATION",
+    "name": "AB-410: Building Intelligent Applications",
+    "cat": "certification",
+    "logo": "./assets/microsoft-certified-associate-badge.svg",
+    "x": 300,
+    "y": -50,
+    "xp": 400,
+    "pre": [
+        "ai201",
+        "ai202",
+        "ai203",
+        "ai204",
+        "lp205",
+        "lp206"
+    ],
+    "desc": "Design, build, and implement intelligent applications using Microsoft Power Platform, Copilot, AI capabilities, Dataverse, Power Apps, Power Automate, and Power Pages.",
+    "learn": "https://learn.microsoft.com/en-us/credentials/certifications/intelligent-applications-builder-associate/",
+    "skills": [
+        "Power Apps",
+        "Power Automate",
+        "Dataverse",
+        "Copilot",
+        "AI Hub",
+        "Power Pages",
+        "Cloud Flows",
+        "Business Logic",
+        "ALM"
+    ]
+},
+  {
+    "id": "ab900",
+    "code": "CERTIFICATION",
+    "name": "AB-900: Microsoft 365 Certified: Copilot and Agent Administration Fundamentals",
+    "cat": "certification",
+    "logo": "./assets/microsoft-certified-fundamentals-badge.svg",
+    "x": 450,
+    "y": -50,
+    "xp": 400,
+    "pre": [
+        "ai202",
+        "ai203",
+        "ai204",
+        "ai301"
+    ],
+    "desc": "Demonstrate foundational skills for administering Microsoft 365, Copilot, and agents, including security, identity, data protection, governance, and basic administrative tasks.",
+    "learn": "https://learn.microsoft.com/en-us/credentials/certifications/copilot-and-agent-administration-fundamentals/",
+    "skills": [
+        "Microsoft 365",
+        "Microsoft 365 Copilot",
+        "Copilot and Agents",
+        "Microsoft 365 Administration",
+        "Microsoft Entra ID",
+        "Microsoft Purview",
+        "Security",
+        "Data Protection",
+        "Governance",
+        "Agent Administration"
+    ]
+},
+  
+  {
+    "id": "ai301",
+    "code": "LP-301",
+    "name": "Microsoft Foundry",
+    "cat": "advanced",
+    "x": 590,
+    "y": 300,
+    "xp": 250,
+    "pre": [
+      "ai103"
+    ],
+    "desc": "Build, deploy and manage AI applications and models with Microsoft Foundry.",
+    "learn": "https://learn.microsoft.com/en-us/training/azure/ai-foundry",
+    "skills": [
+      "Foundry",
+      "Models",
+      "Deployment"
+    ]
+  },
+  {
+    "id": "ai302",
+    "code": "LP-302",
+    "name": "Python for AI Engineering",
+    "cat": "advanced",
+    "x": 800,
+    "y": 300,
+    "xp": 300,
+    "pre": [
+      "ai102",
+      "ai103"
+    ],
+    "desc": "Python for AI APIs, LLM applications, structured outputs and tool calling.",
+    "learn": "https://learn.microsoft.com/en-us/training/paths/develop-language-solutions-azure-ai/",
+    "skills": [
+      "Python",
+      "AI APIs",
+      "Function Calling"
+    ]
+  },
+  {
+    "id": "ai303",
+    "code": "LP-303",
+    "name": "Generative AI App Development",
+    "cat": "advanced",
+    "x": 800,
+    "y": 170,
+    "xp": 350,
+    "pre": [
+      "ai301",
+      "ai302"
+    ],
+    "desc": "Build production-oriented generative AI applications.",
+    "learn": "https://learn.microsoft.com/en-us/training/paths/develop-generative-ai-apps/",
+    "skills": [
+      "RAG",
+      "APIs",
+      "AI Applications"
+    ]
+  },
+  {
+    "id": "ai304",
+    "code": "LP-304",
+    "name": "AI Agent Engineering",
+    "cat": "advanced",
+    "x": 700,
+    "y": 70,
+    "xp": 400,
+    "pre": [
+      "ai301",
+      "ai302",
+      "ai303"
+    ],
+    "desc": "Engineer robust AI agents with tools, memory and orchestration.",
+    "learn": "https://learn.microsoft.com/en-us/training/career-paths/ai-engineer/",
+    "skills": [
+      "Agent Architecture",
+      "Tools",
+      "Orchestration"
+    ]
+  },
+  {
+    "id": "ai305",
+    "code": "LP-305",
+    "name": "AI Evaluation",
+    "cat": "advanced",
+    "x": 910,
+    "y": 20,
+    "xp": 450,
+    "pre": [
+      "ai301",
+      "ai303",
+      "ai304"
+    ],
+    "desc": "Evaluate AI systems for quality, reliability, safety and performance.",
+    "learn": "https://learn.microsoft.com/en-us/training/modules/evaluate-generative-ai-apps/",
+    "skills": [
+      "Evaluation",
+      "Safety",
+      "Quality"
+    ]
+  },
+  {
+    "id": "ai-chat-business-workflows",
+    "code": "APPLIED SKILL",
+    "name": "Streamline Business Workflows with AI Chat",
+    "cat": "applied-skill",
+    "x": 965,
+    "y": 370,
+    "xp": 75,
+    "pre": [
+      "ai102"
+    ],
+    "desc": "Use AI chat to streamline business workflows, improve productivity, and work more effectively with Microsoft 365.",
+    "learn": "https://learn.microsoft.com/en-us/credentials/applied-skills/streamline-business-workflows-with-ai-chat/",
+    "skills": [
+      "AI Chat",
+      "Business Workflows",
+      "Microsoft 365"
+    ]
+  },
+  {
+  "id": "ab731",
+  "code": "CERTIFICATION",
+  "name": "AB-731: AI Transformation Leader",
+  "cat": "certification",
+  "logo": "./assets/ai-transformation-leader.svg",
+  "x": 1100,
+  "y": 180,
+  "xp": 500,
+  "pre": [
+    "ai103",
+    "ai-chat-business-workflows"
+  ],
+  "desc": "Lead AI transformation and innovation using Microsoft 365 Copilot, Azure AI and Microsoft Foundry.",
+  "learn": "https://learn.microsoft.com/en-us/credentials/certifications/ai-transformation-leader/?practice-assessment-type=certification",
+  "skills": [
+    "AI Transformation",
+    "AI Adoption",
+    "Microsoft 365 Copilot",
+    "Microsoft Foundry",
+    "Responsible AI"
+  ]
+},
+  {
+    "id": "prompt",
+    "code": "SKILL",
+    "name": "Prompt Engineering",
+    "cat": "foundation",
+    "x": 385,
+    "y": 550,
+    "xp": 50,
+    "pre": [
+      "ai101"
+    ],
+    "desc": "Learn to communicate effectively with generative AI systems.",
+    "learn": "https://learn.microsoft.com/en-us/training/modules/create-prompts-for-generative-ai-training-tools/",
+    "skills": [
+      "Prompts",
+      "Context",
+      "Instructions"
+    ]
+  },
+  {
+  "id": "ab102",
+  "code": "CERTIFICATION",
+  "name": "AI-102: Azure AI Engineer Associate",
+  "cat": "certification",
+  "logo": "./assets/microsoft-certified-associate-badge.svg",
+  "x": 750,
+  "y": -50,
+  "xp": 500,
+  "pre": [
+    "ai301",
+    "ai302",
+    "ai303",
+    "ai304",
+    "ai305"
+  ],
+  "desc": "Design and implement Azure AI solutions using Azure AI services, Azure AI Search, and Azure OpenAI. Build secure AI solutions across generative AI, agentic AI, computer vision, natural language processing, knowledge mining, and information extraction.",
+  "learn": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/",
+  "skills": [
+    "Azure AI Services",
+    "Generative AI",
+    "Agentic AI",
+    "Computer Vision",
+    "Natural Language Processing",
+    "Azure AI Search",
+    "Knowledge Mining",
+    "Information Extraction",
+    "Azure OpenAI",
+    "Responsible AI",
+    "REST APIs",
+    "Python",
+    "C#",
+    "AI Solution Development"
+  ]
+},
+
+
+    {
+    "id": "ab100",
+    "code": "CERTIFICATION",
+    "name": "AB-100: Agentic AI Business Solutions Architect",
+    "cat": "certification",
+    "logo": "./assets/microsoft-certified-expert-badge.svg",
+    "x": 600,
+    "y": -50,
+    "xp": 500,
+    "pre": [
+        "ai301",
+        "ai302",
+        "ai303",
+        "ai304",
+        "ai201"
+    ],
+    "desc": "Architect and deploy secure, scalable, agentic AI business solutions using Microsoft Power Platform, Copilot Studio, Microsoft Foundry, Dynamics 365, and other Microsoft AI services.",
+    "learn": "https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-business-solutions-architect/",
+    "skills": [
+        "AI Solution Architecture",
+        "Agentic AI",
+        "Multi-Agent Solutions",
+        "Copilot Studio",
+        "Microsoft Foundry",
+        "Power Platform",
+        "Security",
+        "Scalability",
+        "ALM",
+        "Governance"
+    ]
+},
+  {
+    "id": "lp206",
+    "code": "LP-206",
+    "name": "Power Apps AI",
+    "cat": "platform",
+    "x": 70,
+    "y": 350,
+    "xp": 50,
+    "pre": [
+      "ai201"
+    ],
+    "desc": "AI capabilities inside Power Apps.",
+    "learn": "https://learn.microsoft.com/en-us/training/modules/use-copilot-power-apps/",
+    "skills": [
+      "AI Apps",
+      "Code Apps",
+      "Copilot"
+    ]
+  }
+]

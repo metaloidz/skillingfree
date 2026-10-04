@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Microsoft AI Skill Tree</title>
+<style>
+:root{--bg:#080c18;--panel:#121a2d;--card:#17213a;--line:#35415e;--text:#eef3ff;--muted:#91a0bd;--gold:#f5b942;--green:#43d17a}
+*{box-sizing:border-box}body{margin:0;background:#050814;color:var(--text);font-family:Inter,Segoe UI,system-ui,sans-serif}
+.game{min-height:100vh;background:radial-gradient(circle at 50% 35%,#15223c,#080c18 65%);overflow:hidden}
+.top{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 24px;background:rgba(18,26,45,.94);border-bottom:1px solid #26324b}
+h1{font-size:24px;margin:0;font-weight:850}.sub{font-size:13px;color:var(--muted);margin-top:4px}.stats{display:flex;gap:9px;flex-wrap:wrap}.stat{background:#0d1426;border:1px solid #2b3854;border-radius:12px;padding:8px 13px}.stat b{display:block;font-size:17px}.stat span{font-size:10px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;padding:10px 16px;background:#0b1222;border-bottom:1px solid #26324b;overflow:auto}.btn{border:1px solid #33415e;background:#151f35;color:#dce6fa;border-radius:9px;padding:9px 12px;font-size:12px;cursor:pointer;white-space:nowrap}.btn:hover,.btn.active{border-color:var(--gold);background:#202b45;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;height:calc(100vh - 127px);min-height:620px}.viewport{overflow:auto;cursor:grab;background:radial-gradient(circle at 48% 43%,rgba(85,110,180,.13),transparent 42%)}.viewport.dragging{cursor:grabbing}.canvas{position:relative;width:1200px;height:760px;min-width:1200px}.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.link{stroke:#35415e;stroke-width:2;fill:none}.link.done{stroke:var(--green);stroke-width:3}.link.available{stroke:var(--gold);stroke-width:3;stroke-dasharray:8 7}.node{position:absolute;width:125px;min-height:72px;transform:translate(-50%,-50%);border:1px solid #3b4967;border-radius:14px;background:linear-gradient(145deg,#17213a,#11192c);padding:10px 8px;text-align:center;color:#eef3ff;cursor:pointer;transition:.2s;box-shadow:0 8px 25px #0005}.node:hover{transform:translate(-50%,-50%) scale(1.07);z-index:5}.node.selected{outline:2px solid #fff;box-shadow:0 0 0 5px #f5b9422e}.node.locked{opacity:.35;filter:grayscale(.45)}.node.available{border-color:var(--gold);box-shadow:0 0 22px #f5b94235}.node.completed{border-color:var(--green);box-shadow:0 0 20px #43d17a2c}.node.main{width:160px;min-height:82px;background:linear-gradient(145deg,#392356,#1b1930);border-color:#9b59d8}.node.foundation{background:linear-gradient(145deg,#4b3410,#201a12);border-color:#e3a83a}.node.platform{background:linear-gradient(145deg,#123354,#122034);border-color:#4d9ee8}.node.engineering{background:linear-gradient(145deg,#49330d,#211b10);border-color:#eab33e}.node.advanced{background:linear-gradient(145deg,#4a1747,#24152b);border-color:#df5fc7}.code{font-size:10px;font-weight:850;letter-spacing:.5px}.name{font-size:12px;line-height:1.2;margin-top:5px;font-weight:750}.state{font-size:9px;color:var(--muted);margin-top:5px}
+.side{border-left:1px solid #26324b;background:#0e1527;padding:20px;overflow:auto}.side .code{color:var(--gold)}.side h2{font-size:19px;margin:5px 0}.side p{font-size:13px;line-height:1.55;color:#aab7cf}.section{border-top:1px solid #27334c;margin-top:16px;padding-top:14px}.tag{display:inline-block;padding:5px 7px;border:1px solid #34415e;border-radius:7px;margin:4px 3px 0 0;font-size:10px;color:#cbd6eb}.primary{width:100%;margin-top:14px;background:#d89f2e;color:#111827;border:0;font-weight:850}.primary:hover{background:#f0b83f}.progress{height:7px;background:#202b40;border-radius:20px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--green);width:0;transition:.35s}
+.legend{position:absolute;left:20px;bottom:20px;background:#0c1324dd;border:1px solid #293650;border-radius:12px;padding:10px;font-size:10px;color:#aab7cf}.legend span{margin-right:10px}
+.particle{fill:#fff1a3;filter:drop-shadow(0 0 6px #f5b942)}
+@media(max-width:900px){.layout{grid-template-columns:1fr;height:auto}.side{border-left:0;border-top:1px solid #26324b;min-height:330px}.stats{display:none}.game{overflow:auto}}
+.learnnote{font-size:10px;color:#8290aa;margin-top:12px;line-height:1.45}
+
+/* ============================================================
+   ASSESSMENT UI
+   ============================================================ */
+
+.assessment-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(5,8,20,.96);
+    backdrop-filter:blur(10px);
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+}
+
+.assessment-overlay.open{
+    display:flex;
+}
+
+.assessment-card{
+    width:min(680px,100%);
+    max-height:90%;
+    overflow-y:auto;
+    background:linear-gradient(145deg,#151f36,#0d1425);
+    border:1px solid #35415e;
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 25px 80px rgba(0,0,0,.6);
+}
+
+.assessment-header{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:25px;
+}
+
+.assessment-code{
+    color:#f5b942;
+    font-size:11px;
+    font-weight:800;
+}
+
+.assessment-title{
+    font-size:22px;
+    font-weight:850;
+    margin-top:5px;
+}
+
+.assessment-progress{
+    color:#91a0bd;
+    font-size:12px;
+}
+
+.question-number{
+    color:#f5b942;
+    font-size:11px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.question-text{
+    font-size:19px;
+    line-height:1.45;
+    font-weight:750;
+    margin-bottom:20px;
+}
+
+.answer-option{
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:11px;
+    border:1px solid #34415e;
+    background:#111a2d;
+    color:#e8efff;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.answer-option:hover{
+    border-color:#f5b942;
+    background:#1c2943;
+}
+
+.answer-option.selected{
+    border-color:#f5b942;
+    background:#3a2d12;
+}
+
+.assessment-actions{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:24px;
+}
+
+.assessment-result{
+    text-align:center;
+    padding:25px;
+}
+
+.assessment-score{
+    font-size:48px;
+    font-weight:900;
+    color:#43d17a;
+}
+
+.assessment-failed .assessment-score{
+    color:#ff7b72;
+}
+
+.assessment-result-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}.secondary-action{border:1px solid #44516d;background:#151f35;color:#dce6fa;border-radius:9px;padding:10px 16px;font-size:12px;font-weight:800;cursor:pointer}.secondary-action:hover{border-color:#f5b942;background:#202b45;color:#fff}
+.assessment-message{
+    color:#aab7cf;
+    line-height:1.6;
+    margin:15px 0 25px;
+}
+</style>
+</head>
+<body>
+<div class="game" id="app">
+<header class="top">
+<div><h1>MICROSOFT AI SKILL TREE</h1><div class="sub">Interactive learning & certification roadmap</div></div>
+<div class="stats"><div class="stat"><b id="xp">0</b><span>XP</span></div><div class="stat"><b id="done">0</b><span>COMPLETED</span></div><div class="stat"><b id="pct">0%</b><span>PROGRESS</span></div></div>
+</header>
+<nav class="toolbar">
+<button class="btn active" data-filter="all">ALL</button><button class="btn" data-filter="foundation">FOUNDATION</button><button class="btn" data-filter="platform">POWER PLATFORM</button><button class="btn" data-filter="engineering">AI ENGINEERING</button><button class="btn" data-filter="advanced">AI AGENTS</button><button class="btn" id="profile">MY LEARN PROFILE ↗</button><button class="btn" id="reset">RESET PROGRESS</button>
+</nav>
+<div class="layout">
+<main class="viewport" id="viewport"><div class="canvas" id="canvas"><svg class="links" id="svg" viewBox="0 0 1200 760"></svg><div class="legend"><span>🟢 COMPLETED</span><span>🟡 AVAILABLE</span><span>🔒 LOCKED</span></div></div></main>
+<aside class="side" id="details"></aside>
+</div>
+<!-- ============================================================
+     MODULE ASSESSMENT POPUP
+     ============================================================ -->
+
+<div class="assessment-overlay" id="assessmentOverlay">
+
+    <div class="assessment-card">
+
+        <div class="assessment-header">
+
+            <div>
+
+                <div
+                    class="assessment-code"
+                    id="assessmentCode">
+                    AI-101
+                </div>
+
+                <div
+                    class="assessment-title"
+                    id="assessmentTitle">
+                    Module Assessment
+                </div>
+
+            </div>
+
+            <div
+                class="assessment-progress"
+                id="assessmentProgress">
+                Question 1 / 5
+            </div>
+
+        </div>
+
+
+        <div id="assessmentBody">
+
+            <div
+                class="question-number"
+                id="questionNumber">
+                QUESTION 1
+            </div>
+
+            <div
+                class="question-text"
+                id="questionText">
+                Question goes here
+            </div>
+
+            <div id="answerOptions"></div>
+
+        </div>
+
+
+        <div class="assessment-actions">
+
+            <button
+                type="button"
+                class="btn"
+                id="assessmentCancel">
+
+                CANCEL
+
+            </button>
+
+            <button
+                type="button"
+                class="btn primary"
+                id="assessmentNext">
+
+                NEXT QUESTION
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+<script>
+const nodes=[
+{id:'ai101',code:'AI-101',name:'AI Fundamentals',cat:'foundation',x:590,y:665,xp:100,pre:[],desc:'Core AI concepts, machine learning, responsible AI and the Microsoft AI landscape.',learn:'https://learn.microsoft.com/en-us/training/modules/get-started-ai-fundamentals/',skills:['AI concepts','Machine Learning','Responsible AI']},
+{id:'ai102',code:'AI-102',name:'Generative AI',cat:'foundation',x:590,y:550,xp:150,pre:['ai101'],desc:'LLMs, prompt engineering, generative AI patterns and application fundamentals.',learn:'https://learn.microsoft.com/en-us/training/modules/fundamentals-generative-ai/',skills:['LLMs','Prompt Engineering','Generative AI']},
+{id:'ai103',code:'AI-103',name:'Microsoft AI Ecosystem',cat:'main',x:590,y:430,xp:200,pre:['ai101','ai102'],desc:'Azure AI, Microsoft Foundry, Power Platform, Copilot and the Microsoft AI ecosystem.',learn:'https://learn.microsoft.com/en-us/training/modules/get-started-with-ai-in-azure/',skills:['Azure AI','Copilot','Power Platform']},
+{id:'ai201',code:'AI-201',name:'AI + Power Platform',cat:'platform',x:210,y:430,xp:150,pre:['ai101'],desc:'Apply AI to Power Apps, Power Automate, Dataverse and AI-assisted business processes.',learn:'https://learn.microsoft.com/en-us/training/paths/implement-ai-models-microsoft-power-platform-ai-builder/',skills:['Power Apps','Power Automate','Dataverse','AI Builder']},
+{id:'ai202',code:'AI-202',name:'Copilot',cat:'platform',x:210,y:300,xp:175,pre:['ai201','ai102'],desc:'Understand Microsoft Copilot and generative AI in business workflows.',learn:'https://learn.microsoft.com/en-us/training/modules/introduction-copilot-power-platform/',skills:['Copilot','Prompting','Business AI']},
+{id:'ai203',code:'AI-203',name:'Copilot Studio',cat:'platform',x:210,y:170,xp:200,pre:['ai202'],desc:'Build copilots and conversational experiences using Copilot Studio.',learn:'https://learn.microsoft.com/en-us/training/paths/create-extend-custom-copilots-microsoft-copilot-studio/',skills:['Agents','Topics','Actions']},
+{id:'ai204',code:'AI-204',name:'AI Agents',cat:'advanced',x:375,y:70,xp:250,pre:['ai203','ai103'],desc:'Design autonomous and tool-using AI agents for enterprise workflows.',learn:'https://learn.microsoft.com/en-us/training/modules/ai-agent-fundamentals/',skills:['Agents','Tools','Orchestration']},
+{id:'ai301',code:'AI-301',name:'Microsoft Foundry',cat:'engineering',x:590,y:300,xp:250,pre:['ai103'],desc:'Build, deploy and manage AI applications and models with Microsoft Foundry.',learn:'https://learn.microsoft.com/en-us/training/azure/ai-foundry',skills:['Foundry','Models','Deployment']},
+{id:'ai302',code:'AI-302',name:'Python for AI Engineering',cat:'engineering',x:800,y:300,xp:300,pre:['ai102','ai103'],desc:'Python for AI APIs, LLM applications, structured outputs and tool calling.',learn:'https://learn.microsoft.com/en-us/training/paths/develop-generative-ai-apps/',skills:['Python','AI APIs','Function Calling']},
+{id:'ai303',code:'AI-303',name:'Generative AI App Development',cat:'advanced',x:800,y:170,xp:350,pre:['ai301','ai302'],desc:'Build production-oriented generative AI applications.',learn:'https://learn.microsoft.com/en-us/training/paths/develop-generative-ai-apps/',skills:['RAG','APIs','AI Applications']},
+{id:'ai304',code:'AI-304',name:'AI Agent Engineering',cat:'advanced',x:800,y:70,xp:400,pre:['ai301','ai302','ai303'],desc:'Engineer robust AI agents with tools, memory and orchestration.',learn:'https://learn.microsoft.com/en-us/training/modules/build-extend-ai-agents/',skills:['Agent Architecture','Tools','Orchestration']},
+{id:'ai305',code:'AI-305',name:'AI Evaluation',cat:'advanced',x:1010,y:70,xp:450,pre:['ai301','ai303','ai304'],desc:'Evaluate AI systems for quality, reliability, safety and performance.',learn:'https://learn.microsoft.com/en-us/training/modules/evaluate-generative-ai-apps/',skills:['Evaluation','Safety','Quality']},
+{id:'python',code:'SKILL',name:'Python',cat:'engineering',x:965,y:370,xp:75,pre:['ai102'],desc:'Programming foundation used throughout AI Engineering.',learn:'https://learn.microsoft.com/en-us/training/paths/develop-generative-ai-apps/',skills:['Python','Programming']},
+{id:'prompt',code:'SKILL',name:'Prompt Engineering',cat:'foundation',x:385,y:550,xp:50,pre:['ai101'],desc:'Learn to communicate effectively with generative AI systems.',learn:'https://learn.microsoft.com/en-us/training/modules/create-prompts-for-generative-ai-training-tools/',skills:['Prompts','Context','Instructions']},
+{id:'powerapps',code:'TECH',name:'Power Apps AI',cat:'platform',x:70,y:350,xp:50,pre:['ai201'],desc:'AI capabilities inside Power Apps.',learn:'https://learn.microsoft.com/en-us/training/modules/use-copilot-power-apps/',skills:['AI Apps','Code Apps','Copilot']}
+];
+
+/* ============================================================
+   MODULE ASSESSMENTS
+   ============================================================ */
+
+const assessments = {
+
+  ai101: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is the primary goal of artificial intelligence?",
+        options: [
+          "To replace all software applications",
+          "To enable machines to perform tasks that normally require human intelligence",
+          "To store large amounts of data",
+          "To increase internet speed"
+        ],
+        answer: 1
+      },
+	{
+        question: "Which is the most accurate description of generative AI?",
+        options: [
+          "Generative AI uses a language model to create original content in response to a prompt.",
+          "Generative AI is an older form of AI that's superseded by machine learning.",
+          "Generative AI is a complex form of AI that can only be used by specialists such as data scientists."
+        ],
+        answer: 0
+      },
+	{
+        question: "What is an AI agent?",
+        options: [
+          "A technology professional who builds AI applications.",
+          "Anyone who uses AI applications.",
+          "An AI application that can perform tasks on behalf of a user."
+        ],
+        answer: 2
+      },
+	{
+        question: "An AI application reads email aloud to a user. Which AI speech capability is being used?",
+        options: [
+          "Speech recognition",
+          "Speech synthesis",
+          "Sentiment analysis"
+        ],
+        answer: 1
+      },
+      {
+        question: "Which technology is commonly used to build predictive AI models?",
+        options: [
+          "Machine Learning",
+          "HTML",
+          "CSS",
+          "File Storage"
+        ],
+        answer: 0
+      },
+      {
+        question: "Which concept is part of Responsible AI?",
+        options: [
+          "Fairness",
+          "Faster internet",
+          "Higher screen resolution",
+          "More storage"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai102: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is a large language model (LLM)?",
+        options: [
+          "A type of AI model designed to generate human-like text.",
+          "A model that only processes images, not text.",
+          "A small, efficient model for mobile devices."
+        ],
+        answer: 0
+      },
+      {
+        question: "What is the purpose of tokenization?",
+        options: [
+          "To sort the words in a sentence alphabetically",
+          "To break down text into smaller units.",
+          "To convert text into binary code for processing by computers."
+        ],
+        answer: 1
+      }
+    ]
+  },
+
+  ai103: {
+    passScore: 80,
+    questions: [
+      {
+        question: "Which Microsoft platform provides capabilities for building AI applications?",
+        options: [
+          "Microsoft Foundry",
+          "Microsoft Paint",
+          "Windows Calculator",
+          "Notepad"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai201: {
+    passScore: 80,
+    questions: [
+      {
+        question: "Which Power Platform service can automate business processes?",
+        options: [
+          "Power Automate",
+          "PowerPoint",
+          "OneNote",
+          "Paint"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai202: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is Microsoft Copilot primarily designed to provide?",
+        options: [
+          "AI-assisted experiences",
+          "Hard-drive formatting",
+          "Network routing",
+          "Operating system installation"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai203: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What can you build using Microsoft Copilot Studio?",
+        options: [
+          "AI agents",
+          "Computer processors",
+          "Operating systems",
+          "Network cables"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai204: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is an AI agent designed to do?",
+        options: [
+          "Perform tasks using reasoning, tools and actions",
+          "Only display static text",
+          "Replace a database",
+          "Compress files"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai301: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is Microsoft Foundry used for?",
+        options: [
+          "Building and managing AI applications and agents",
+          "Editing photographs",
+          "Managing Windows wallpapers",
+          "Creating spreadsheets only"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai302: {
+    passScore: 80,
+    questions: [
+      {
+        question: "Which programming language is the focus of this module?",
+        options: [
+          "Python",
+          "HTML",
+          "CSS",
+          "SQL only"
+        ],
+        answer: 0
+      },
+      {
+        question: "What is function calling useful for in AI applications?",
+        options: [
+          "Allowing an AI model to interact with external tools or functions",
+          "Increasing monitor resolution",
+          "Compressing images",
+          "Installing Windows"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai303: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is RAG commonly used for?",
+        options: [
+          "Grounding AI responses with external knowledge",
+          "Increasing CPU clock speed",
+          "Formatting hard drives",
+          "Creating network cables"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai304: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What distinguishes an AI agent from a basic chatbot?",
+        options: [
+          "Agents can use tools and take actions toward goals",
+          "Agents cannot use data",
+          "Agents only display predefined text",
+          "Agents are hardware devices"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  ai305: {
+    passScore: 80,
+    questions: [
+      {
+        question: "Why should generative AI applications be evaluated?",
+        options: [
+          "To measure quality, reliability and safety",
+          "To increase monitor brightness",
+          "To reduce keyboard input",
+          "To change the operating system"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  prompt: {
+    passScore: 80,
+    questions: [
+      {
+        question: "What is the purpose of a good AI prompt?",
+        options: [
+          "Give the model clear instructions and context",
+          "Increase internet bandwidth",
+          "Change computer hardware",
+          "Create a database"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  python: {
+    passScore: 80,
+    questions: [
+      {
+        question: "Why is Python commonly used in AI development?",
+        options: [
+          "It has a large ecosystem of AI and data libraries",
+          "It only works with Microsoft hardware",
+          "It cannot work with APIs",
+          "It is a database"
+        ],
+        answer: 0
+      }
+    ]
+  },
+
+  powerapps: {
+    passScore: 80,
+    questions: [
+      {
+        question: "Which Microsoft product is used to build low-code business applications?",
+        options: [
+          "Power Apps",
+          "PowerPoint",
+          "Outlook",
+          "Paint"
+        ],
+        answer: 0
+      }
+    ]
+  }
+
+};
+
+const byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
+let state=Object.fromEntries(nodes.map(n=>[n.id,false]));
+let selected='ai101',filter='all',anim=0,raf;
+const canvas=document.getElementById('canvas'),svg=document.getElementById('svg'),details=document.getElementById('details');
+function unlocked(n){return n.pre.every(id=>state[id])}
+function status(n){return state[n.id]?'completed':unlocked(n)?'available':'locked'}
+function draw(){
+canvas.querySelectorAll('.node').forEach(e=>e.remove());svg.innerHTML='';
+nodes.forEach(n=>n.pre.forEach(pid=>{let p=byId[pid],l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',p.x);l.setAttribute('y1',p.y);l.setAttribute('x2',n.x);l.setAttribute('y2',n.y);l.classList.add('link');if(state[pid]&&unlocked(n))l.classList.add('done');else if(unlocked(n))l.classList.add('available');svg.appendChild(l)}));
+nodes.forEach(n=>{let s=status(n),b=document.createElement('button');b.className=`node ${n.cat} ${s}${selected===n.id?' selected':''}`;b.style.left=n.x+'px';b.style.top=n.y+'px';b.innerHTML=`<div class="code">${n.code}${s==='completed'?' ✓':''}</div><div class="name">${n.name}</div><div class="state">${s==='locked'?'🔒 LOCKED':s==='completed'?'COMPLETED':'AVAILABLE'}</div>`;b.addEventListener('click',()=>select(n.id));b.style.opacity=filter==='all'||n.cat===filter?'1':'.18';canvas.appendChild(b)});
+updateStats();showDetails(byId[selected]);
+}
+function select(id){selected=id;draw()}
+function showDetails(n){
+let s=status(n);
+details.innerHTML=`<div class="code">${n.code}</div><h2>${n.name}</h2><p>${n.desc}</p>
+<div class="section"><strong>STATUS</strong><div class="tag">${s.toUpperCase()}</div></div>
+<div class="section"><strong>PREREQUISITES</strong><p>${n.pre.length?n.pre.map(id=>(state[id]?'✓ ':'🔒 ')+byId[id].code+' — '+byId[id].name).join('<br>'):'None — starting point'}</p></div>
+<div class="section"><strong>SKILLS</strong><div>${n.skills.map(x=>`<span class="tag">${x}</span>`).join('')}</div></div>
+<div class="section"><strong>REWARD</strong><p>${n.xp} XP</p></div>
+<button class="btn primary" id="learn" ${s==='locked'?'disabled':''}>${s==='locked'?'LOCKED — COMPLETE PREREQUISITES':'OPEN MICROSOFT LEARN ↗'}</button>
+<div class="section"><strong>LEARNING WORKFLOW</strong>
+<p>1. Open the Microsoft Learn resource.<br>2. Sign in with the Microsoft account you use for Learn.<br>3. Complete the module/path and its knowledge checks.<br>4. Return here and mark this skill complete.</p></div>
+
+<button
+    class="btn primary"
+    id="assessment"
+    ${s==='locked'?'disabled':''}>
+    ${s==='locked'
+        ? '🔒 LOCKED'
+        : '📝 TAKE ASSESSMENT'}
+</button>
+
+<div class="section"><strong>LEARNING PROGRESS</strong><div class="progress"><i style="width:${state[n.id]?'100':'0'}%"></i></div></div>`;
+const learnBtn=details.querySelector('#learn');
+if(learnBtn && s!=='locked') learnBtn.addEventListener('click',()=>window.open(n.learn,'_blank','noopener,noreferrer'));
+const assessmentButton =
+    details.querySelector('#assessment');
+
+if(assessmentButton && s !== 'locked'){
+
+    assessmentButton.addEventListener(
+        'click',
+        ()=>startAssessment(n.id)
+    );
+
+}
+}
+function updateStats(){let d=nodes.filter(n=>state[n.id]).length;document.getElementById('done').textContent=d;document.getElementById('xp').textContent=nodes.filter(n=>state[n.id]).reduce((a,n)=>a+n.xp,0);document.getElementById('pct').textContent=Math.round(d/nodes.length*100)+'%'}
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));draw()}));
+document.getElementById('profile').addEventListener('click',()=>window.open('https://learn.microsoft.com/users/me/achievements','_blank','noopener,noreferrer'));
+document.getElementById('reset').addEventListener('click',()=>{state=Object.fromEntries(nodes.map(n=>[n.id,false]));selected='ai101';draw()});
+let dragging=false,lx=0,ly=0;const vp=document.getElementById('viewport');
+vp.addEventListener('pointerdown',e=>{if(e.target.closest('.node'))return;dragging=true;lx=e.clientX;ly=e.clientY;vp.setPointerCapture(e.pointerId);vp.classList.add('dragging')});
+vp.addEventListener('pointermove',e=>{if(!dragging)return;vp.scrollLeft-=e.clientX-lx;vp.scrollTop-=e.clientY-ly;lx=e.clientX;ly=e.clientY});
+vp.addEventListener('pointerup',()=>{dragging=false;vp.classList.remove('dragging')});
+function animate(){anim+=.018;document.querySelectorAll('.link.done').forEach((l,i)=>{l.style.opacity=.65+.35*Math.sin(anim*4+i)});raf=requestAnimationFrame(animate)}
+/* ============================================================
+   ASSESSMENT ENGINE
+   ============================================================ */
+
+let assessmentModule = null;
+let assessmentQuestion = 0;
+let assessmentAnswers = [];
+let assessmentResult = null;
+
+const assessmentOverlay = document.getElementById("assessmentOverlay");
+const assessmentBody = document.getElementById("assessmentBody");
+const assessmentNext = document.getElementById("assessmentNext");
+
+function resetAssessmentBody(){
+    /* Rebuild the question UI every time an assessment starts.
+       This is important because submitAssessment() replaces the
+       body with the congratulations/failure screen. */
+    assessmentBody.innerHTML = `
+        <div class="question-number" id="questionNumber">QUESTION 1</div>
+        <div class="question-text" id="questionText">Question goes here</div>
+        <div id="answerOptions"></div>
+    `;
+}
+
+function startAssessment(moduleId){
+    const assessment = assessments[moduleId];
+    const module = byId[moduleId];
+
+    if(!assessment || !module){
+        alert("Assessment has not been created for this module yet.");
+        return;
+    }
+
+    /* Always start a completely fresh assessment for the module clicked. */
+    assessmentModule = moduleId;
+    assessmentQuestion = 0;
+    assessmentAnswers = [];
+    assessmentResult = null;
+
+    resetAssessmentBody();
+
+    assessmentOverlay.classList.add("open");
+    renderAssessmentQuestion();
+}
+
+function renderAssessmentQuestion(){
+    const assessment = assessments[assessmentModule];
+    const module = byId[assessmentModule];
+
+    if(!assessment || !module) return;
+
+    /* Make sure the question elements exist. */
+    if(!document.getElementById("questionText")){
+        resetAssessmentBody();
+    }
+
+    const question = assessment.questions[assessmentQuestion];
+
+    document.getElementById("assessmentCode").textContent = module.code;
+    document.getElementById("assessmentTitle").textContent =
+        module.name + " Assessment";
+
+    document.getElementById("assessmentProgress").textContent =
+        "Question " + (assessmentQuestion + 1) +
+        " / " + assessment.questions.length;
+
+    document.getElementById("questionNumber").textContent =
+        "QUESTION " + (assessmentQuestion + 1);
+
+    document.getElementById("questionText").textContent =
+        question.question;
+
+    const options = document.getElementById("answerOptions");
+    options.innerHTML = "";
+
+    question.options.forEach((option,index)=>{
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer-option";
+        button.textContent =
+            String.fromCharCode(65 + index) + ". " + option;
+
+        if(assessmentAnswers[assessmentQuestion] === index){
+            button.classList.add("selected");
+        }
+
+        button.addEventListener("click",()=>{
+            assessmentAnswers[assessmentQuestion] = index;
+            options.querySelectorAll(".answer-option")
+                .forEach(x=>x.classList.remove("selected"));
+            button.classList.add("selected");
+        });
+
+        options.appendChild(button);
+    });
+
+    assessmentNext.dataset.mode = "question";
+    assessmentNext.textContent =
+        assessmentQuestion === assessment.questions.length - 1
+            ? "SUBMIT ASSESSMENT"
+            : "NEXT QUESTION";
+}
+
+/* ONE handler only. Its behavior is determined by data-mode. */
+assessmentNext.addEventListener("click",()=>{
+    const mode = assessmentNext.dataset.mode;
+
+    if(mode === "complete"){
+        completeModuleAfterAssessment();
+        return;
+    }
+
+    if(mode === "retry"){
+        startAssessment(assessmentModule);
+        return;
+    }
+
+    const assessment = assessments[assessmentModule];
+    if(!assessment) return;
+
+    if(assessmentAnswers[assessmentQuestion] === undefined){
+        alert("Please select an answer first.");
+        return;
+    }
+
+    if(assessmentQuestion < assessment.questions.length - 1){
+        assessmentQuestion++;
+        renderAssessmentQuestion();
+    }else{
+        submitAssessment();
+    }
+});
+
+function submitAssessment(){
+    const assessment = assessments[assessmentModule];
+    const module = byId[assessmentModule];
+
+    if(!assessment || !module) return;
+
+    let correct = 0;
+
+    assessment.questions.forEach((question,index)=>{
+        if(assessmentAnswers[index] === question.answer){
+            correct++;
+        }
+    });
+
+    const score = Math.round(
+        (correct / assessment.questions.length) * 100
+    );
+
+    const passed = score >= assessment.passScore;
+    assessmentResult = passed;
+
+    if(passed){
+        assessmentBody.innerHTML = `
+            <div class="assessment-result">
+                <div style="font-size:50px">🎉</div>
+                <div class="assessment-score">${score}%</div>
+                <h2>Assessment Passed</h2>
+                <div class="assessment-message">
+                    You passed the <strong>${module.name}</strong> assessment.
+                    <br><br>
+                    Complete this module to unlock the next skill.
+                </div>
+                <div class="assessment-result-actions">
+                    <button type="button" class="secondary-action" id="retakeAssessment">
+                        ↻ RETAKE ASSESSMENT
+                    </button>
+                </div>
+            </div>`;
+
+        assessmentNext.dataset.mode = "complete";
+        assessmentNext.textContent = "COMPLETE MODULE";
+
+        document.getElementById("retakeAssessment")
+            .addEventListener("click",()=>{
+                startAssessment(assessmentModule);
+            });
+
+    }else{
+        assessmentBody.innerHTML = `
+            <div class="assessment-result assessment-failed">
+                <div style="font-size:50px">📚</div>
+                <div class="assessment-score">${score}%</div>
+                <h2>Assessment Not Passed</h2>
+                <div class="assessment-message">
+                    You need at least ${assessment.passScore}% to complete this module.
+                    <br><br>
+                    Review Microsoft Learn and try again.
+                </div>
+            </div>`;
+
+        assessmentNext.dataset.mode = "retry";
+        assessmentNext.textContent = "TRY AGAIN";
+    }
+}
+
+function completeModuleAfterAssessment(){
+    if(!assessmentModule) return;
+
+    const completedModule = assessmentModule;
+
+    /* Only a passed assessment can reach this function. */
+    if(assessmentResult !== true) return;
+
+    state[completedModule] = true;
+
+    assessmentOverlay.classList.remove("open");
+
+    /* Select the module that was actually completed. */
+    selected = completedModule;
+
+    /* Clear assessment state so the next module starts fresh. */
+    assessmentModule = null;
+    assessmentQuestion = 0;
+    assessmentAnswers = [];
+    assessmentResult = null;
+
+    draw();
+}
+
+document.getElementById("assessmentCancel").addEventListener("click",()=>{
+    assessmentOverlay.classList.remove("open");
+
+    assessmentModule = null;
+    assessmentQuestion = 0;
+    assessmentAnswers = [];
+    assessmentResult = null;
+});
+
+draw();animate();
+</script>
+</body>
+</html>

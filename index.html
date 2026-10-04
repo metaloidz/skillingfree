@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+    name="description"
+    content="SkillingFree — an independent Microsoft AI learning and certification roadmap."
+>
+<meta
+    name="author"
+    content="Loidan Pañares"
+>
+
+<title>SkillingFree — Microsoft AI Skill Tree</title>
+<link rel="stylesheet" href="./css/styles.css">
+<link rel="icon" type="image/png" href="./assets/SF_logo.png">
+</head>
+<body>
+<div class="game" id="app">
+<header class="top">
+
+<div class="home-brand">
+
+    <a
+        href="./index.html"
+        class="skillingfree-logo"
+        aria-label="SkillingFree Home"
+    >
+        <img
+            src="./assets/SF_logo.png"
+            alt="SkillingFree"
+        >
+    </a>
+
+    <div class="home-brand-name">
+        SKILLINGFREE
+    </div>
+
+</div>
+
+
+<div class="skill-tree-selector">
+
+    <select
+        id="skillTreeSelector"
+        class="skill-tree-dropdown"
+        aria-label="Select AI Skill Tree"
+    >
+
+        <option value="microsoft">
+            MICROSOFT AI SKILL TREE
+        </option>
+
+        <option value="google" disabled>
+            🔒 GOOGLE AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="openai" disabled>
+            🔒 OPENAI AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="anthropic" disabled>
+            🔒 ANTHROPIC AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="aws" disabled>
+            🔒 AWS AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="nvidia" disabled>
+            🔒 NVIDIA AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="ibm" disabled>
+            🔒 IBM AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="meta" disabled>
+            🔒 META AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="huggingface" disabled>
+            🔒 HUGGING FACE AI SKILL TREE — LOCKED
+        </option>
+
+        <option value="databricks" disabled>
+            🔒 DATABRICKS AI SKILL TREE — LOCKED
+        </option>
+
+    </select>
+
+    <div class="sub">
+        Interactive learning &amp; certification roadmap
+    </div>
+
+</div>
+
+
+<div class="stats"><div class="stat"><b id="xp">0</b><span>XP</span></div><div class="stat"><b id="done">0</b><span>COMPLETED</span></div><div class="stat"><b id="pct">0%</b><span>PROGRESS</span></div></div>
+</header>
+
+
+
+<nav class="toolbar">
+
+    <button class="btn active" data-filter="all">
+        ALL
+    </button>
+
+    <button class="btn" data-filter="foundation">
+        FOUNDATION
+    </button>
+
+    <button class="btn" data-filter="platform">
+        POWER PLATFORM
+    </button>
+
+    <button class="btn" data-filter="engineering">
+        AI ENGINEERING
+    </button>
+
+    <button class="btn" data-filter="advanced">
+        AI AGENTS
+    </button>
+
+    <button class="btn" id="profile">
+    MY LEARN PROFILE ↗
+</button>
+
+<button class="btn" id="reset">
+    RESET PROGRESS
+</button>
+
+<button class="btn" id="userProfile">
+    PROFILE
+</button>
+
+</nav>
+
+<div class="layout">
+<main class="viewport" id="viewport"><div class="canvas" id="canvas"><svg class="links" id="svg" viewBox="0 0 1200 760"></svg><div class="legend"><span>🟢 COMPLETED</span><span>🟡 AVAILABLE</span><span>🔒 LOCKED</span></div></div></main>
+<aside class="side" id="details"></aside>
+</div>
+<!-- ============================================================
+     MODULE ASSESSMENT POPUP
+     ============================================================ -->
+
+<div class="assessment-overlay" id="assessmentOverlay">
+
+    <div class="assessment-card">
+
+        <div class="assessment-header">
+
+            <div>
+
+                <div
+                    class="assessment-code"
+                    id="assessmentCode">
+                    AI-101
+                </div>
+
+                <div
+                    class="assessment-title"
+                    id="assessmentTitle">
+                    Module Assessment
+                </div>
+
+            </div>
+
+            <div
+                class="assessment-progress"
+                id="assessmentProgress">
+                Question 1 / 5
+            </div>
+
+        </div>
+
+
+        <div id="assessmentBody">
+
+            <div
+                class="question-number"
+                id="questionNumber">
+                QUESTION 1
+            </div>
+
+            <div
+                class="question-text"
+                id="questionText">
+                Question goes here
+            </div>
+
+            <div id="answerOptions"></div>
+
+        </div>
+
+
+        <div class="assessment-actions">
+
+            <button
+                type="button"
+                class="btn"
+                id="assessmentCancel">
+
+                CANCEL
+
+            </button>
+
+            <button
+                type="button"
+                class="btn primary"
+                id="assessmentNext">
+
+                NEXT QUESTION
+
+            </button>
+
+        </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     USER PROFILE PANEL
+     ============================================================ -->
+
+<div id="userProfileOverlay" class="profile-overlay">
+
+    <div class="profile-panel">
+
+        <div class="profile-header">
+
+            <div>
+
+                <div class="profile-title">
+                    MY PROFILE
+                </div>
+
+                <div class="profile-subtitle">
+                    Your Microsoft AI learning journey
+                </div>
+
+            </div>
+
+            <button
+                id="closeUserProfile"
+                class="profile-close">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="profile-learner">
+
+            <div class="profile-avatar">
+                👤
+            </div>
+
+            <div>
+
+                <div
+                    id="profileName"
+                    class="profile-learner-name">
+                    Guest Learner
+                </div>
+
+                <div
+                    id="profileStatus"
+                    class="profile-learner-status">
+                    Not signed in
+                </div>
+
+            </div>
+
+            <div class="profile-signout-section">
+
+    <button
+        type="button"
+        id="signInButton"
+        class="profile-signout-btn">
+        SIGN IN
+    </button>
+
+
+    <button
+        type="button"
+        id="signOutButton"
+        class="profile-signout-btn">
+        SIGN OUT
+    </button>
+
+</div>
+
+        </div>
+
+
+        <div class="profile-stats">
+
+            <div class="profile-stat-card">
+
+                <div class="profile-stat-label">
+                    SKILLS
+                </div>
+
+                <div
+                    id="profileSkills"
+                    class="profile-stat-value">
+                    0 / 0
+                </div>
+
+            </div>
+
+
+            <div class="profile-stat-card">
+
+                <div class="profile-stat-label">
+                    ASSESSMENTS
+                </div>
+
+                <div
+                    id="profileAssessments"
+                    class="profile-stat-value">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="profile-stat-card">
+
+                <div class="profile-stat-label">
+                    XP
+                </div>
+
+                <div
+                    id="profileXP"
+                    class="profile-stat-value">
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-section">
+
+            <div class="profile-section-header">
+
+                <span>
+                    OVERALL PROGRESS
+                </span>
+
+                <span
+                    id="profilePercentage"
+                    class="profile-percentage">
+                    0%
+                </span>
+
+            </div>
+
+            <div class="profile-progress-track">
+
+                <div
+                    id="profileProgressBar"
+                    class="profile-progress-bar">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-section">
+
+            <div class="profile-section-title">
+                CURRENT LEARNING
+            </div>
+
+            <div class="profile-learning-card">
+
+                <div
+                    id="profileCurrentLearning"
+                    class="profile-learning-title">
+                    No module selected
+                </div>
+
+                <div
+                    id="profileCurrentStatus"
+                    class="profile-learning-status">
+                    Select a skill from the tree to begin.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-section">
+
+            <div class="profile-section-title">
+                COMPLETED SKILLS
+            </div>
+
+            <div
+                id="profileCompletedSkills"
+                class="profile-completed-list">
+
+                <div class="profile-empty">
+                    No skills completed yet.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-save-section">
+
+            <div class="profile-save-title">
+                SAVE YOUR PROGRESS
+            </div>
+
+            <div class="profile-save-description">
+                Sign in to save your learning journey
+                across devices.
+            </div>
+
+            <button
+                id="saveProgress"
+                class="profile-save-btn">
+                SAVE YOUR PROGRESS
+            </button>
+
+                
+    <div
+        id="saveProgressEmail"
+        class="save-progress-email"
+        style="display:none;"
+    >
+
+        <div class="profile-save-title">
+            ENTER YOUR EMAIL
+        </div>
+
+        <div class="profile-save-description">
+            Enter your email address to save your
+            learning journey across devices.
+        </div>
+
+        <input
+            type="email"
+            id="progressEmail"
+            class="profile-save-input"
+            placeholder="Enter your email"
+            autocomplete="email"
+        >
+
+        <button
+            id="continueProgressSave"
+            class="profile-save-btn">
+            CONTINUE
+        </button>
+
+
+
+        <div
+    id="saveProgressMessage"
+    class="profile-save-description"
+    style="display:none; margin-top:14px;"
+>
+    Check your email. We sent you a sign-in link.
+</div>
+
+    </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="./js/app.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="./js/assessment.js"></script>
+
+
+<footer class="site-footer">
+
+    <div class="footer-brand">
+    <strong>SKILLINGFREE</strong>
+    <span>Independent learning resources for the Microsoft ecosystem.</span>
+</div>
+
+
+<div class="footer-nav">
+
+    <a href="./about.html">
+        ABOUT
+    </a>
+
+    <a href="./resources.html">
+        RESOURCES
+    </a>
+
+    <a href="./contact.html">
+        CONTACT
+    </a>
+
+    <a href="./privacy.html">
+        PRIVACY
+    </a>
+
+    <a href="./terms.html">
+        TERMS
+    </a>
+
+</div>
+
+    <div class="footer-disclaimer">
+
+    <div>
+        This is an independent learning resource and is not affiliated with,
+        endorsed by, or sponsored by Microsoft.
+        Microsoft and related trademarks are the property of Microsoft Corporation.
+    </div>
+
+    <div class="footer-version">
+        SkillingFree v1.0 · Last updated October 2026
+    </div>
+
+</div>
+
+    <a
+        href="https://www.linkedin.com/in/loidan/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="footer-link"
+    >
+        FOLLOW LOIDAN PAÑARES ON LINKEDIN →
+    </a>
+
+</footer>
+
+</body>
+
+</html>
