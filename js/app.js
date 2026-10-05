@@ -34,7 +34,7 @@
     ============================================================
     */
 
-    const DEV_MODE = false;
+    const DEV_MODE = true;
 
 
     let anim = 0;

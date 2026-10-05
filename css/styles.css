@@ -1620,9 +1620,16 @@ h1{font-size:24px;margin:0;font-weight:850}
 
     /* Header */
     .top {
-        padding: 16px 14px;
-        text-align: center;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 12px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
 
     .header-brand {
         display: flex;
@@ -1648,13 +1655,15 @@ h1{font-size:24px;margin:0;font-weight:850}
     .toolbar {
     display: flex;
     flex-wrap: nowrap;
-    gap: 6px;
-    padding: 8px;
+    gap: 8px;
+    padding: 8px 10px;
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .toolbar::-webkit-scrollbar {
@@ -1665,6 +1674,7 @@ h1{font-size:24px;margin:0;font-weight:850}
 .toolbar .btn#reset,
 .toolbar .btn#userProfile {
     flex-shrink: 0;
+    margin-left: 0;
 }
 
     .toolbar .btn {
@@ -1674,17 +1684,27 @@ h1{font-size:24px;margin:0;font-weight:850}
 
     /* Skill tree */
     .viewport {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: auto;
-    }
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+}
+
+    .canvas {
+    transform: scale(0.75);
+    transform-origin: top left;
+}
 
     /* Details panel */
     .side {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 16px;
-    }
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    overflow-x: hidden;
+}
 
     /* Legend */
     .legend {
