@@ -1024,6 +1024,28 @@ h1{font-size:24px;margin:0;font-weight:850}
 
     }
 
+        .assessment-overlay {
+        padding: 12px;
+    }
+
+    .assessment-card {
+        width: 100%;
+        max-width: 100%;
+        max-height: calc(100vh - 24px);
+        padding: 18px;
+        border-radius: 16px;
+        box-sizing: border-box;
+    }
+
+    .assessment-title {
+        font-size: 18px;
+    }
+
+    .question-text {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
 
     .yes-no-matrix-statement{
 
